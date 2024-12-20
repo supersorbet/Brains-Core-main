@@ -20,7 +20,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
     using SafeTransferLib for address;
     using LibString for uint256;
 
-    // Custom errors
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                            ERRORS                          */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Thrown when an unauthorized address attempts to perform an action
     error UnauthorizedAccess();
 
@@ -101,6 +104,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
     /// @notice Thrown when the total shares don't add up to 100%
     error InvalidSharesTotal();
 
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                           STRUCTS                         */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Struct to store metadata for a Brain NFT
     struct BrainMetadata {
         string name;
@@ -123,6 +130,25 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
         uint256[] contributedBrains;
     }
 
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                        CONSTANTS                           */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
+    /// @notice Constant for the number of tokens per NFT
+    uint256 private constant TOKENS_PER_NFT = 1000 * 1e18;
+    /// @notice Constant for the stake amount
+    uint256 private constant STAKE_AMOUNT = 100000 * 1e18;
+    /// @notice Constant for the stake duration
+    uint256 private constant STAKE_DURATION = 90 days;
+    /// @notice Constant for the maximum supply of NFTs
+    uint256 public constant MAX_SUPPLY = 1024;
+    /// @notice Constant for the proposal threshold
+    uint256 public constant PROPOSAL_THRESHOLD = 250000 * 1e18; // 250,000 tokens
+
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                           STORAGE                          */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Address of the metadata contract
     BrainsMetadata public metadataContract;
     /// @notice Address of the Brain ERC20 implementation contract
@@ -137,17 +163,6 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
     uint256[] private availableTokenIds;
     /// @notice Array of activated Brain IDs
     uint256[] public activatedBrainIds;
-
-    /// @notice Constant for the number of tokens per NFT
-    uint256 private constant TOKENS_PER_NFT = 1000 * 1e18;
-    /// @notice Constant for the stake amount
-    uint256 private constant STAKE_AMOUNT = 100000 * 1e18;
-    /// @notice Constant for the stake duration
-    uint256 private constant STAKE_DURATION = 90 days;
-    /// @notice Constant for the maximum supply of NFTs
-    uint256 public constant MAX_SUPPLY = 1024;
-    /// @notice Constant for the proposal threshold
-    uint256 public constant PROPOSAL_THRESHOLD = 250000 * 1e18; // 250,000 tokens
 
     /// @notice Mapping of contributor addresses to their ContributorInfo
     mapping(address => ContributorInfo) public contributorInfo;
@@ -168,6 +183,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
     /// @notice Mapping of Brain IDs to their total contributions
     mapping(uint256 => uint256) public brainTotalContributions;
 
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                      CONSTRUCTOR                           */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Constructor for the OPBrains contract
     /// @param _brainERC20Implementation Address of the Brain ERC20 implementation contract
     /// @param _metadataContractAddress Address of the metadata contract
@@ -180,6 +199,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
         metadataContract = BrainsMetadata(_metadataContractAddress);
         brainERC20Implementation = _brainERC20Implementation;
     }
+
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                           EXE                              */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
 
     /// @notice Allows users to redeem Brain NFTs using Brain Credits
     /// @param amount The amount of Brain Credits to redeem
@@ -448,6 +471,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
         }
     }
 
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                           VIEWS                            */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Retrieves user data including owned tokens, linked ERC20s, staked amount, and total contribution
     /// @param user The address of the user
     /// @return ownedTokenIds An array of token IDs owned by the user
@@ -479,6 +506,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
         stakedAmount = stakes[user];
         contributionAmount = contributorInfo[user].totalContribution;
     }
+
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                         VOTING.EXE                        */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
 
     /// @notice Proposes a metadata change for a Brain NFT
     /// @param tokenId The ID of the Brain NFT
@@ -570,6 +601,7 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
     function multicall(
         bytes[] calldata data
     ) external view returns (bytes[] memory results) {
+        /// @solidity memory-safe-assembly
         assembly {
             // Allocate memory for the results array
             results := mload(0x40)
@@ -663,6 +695,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
             "https://ordinals.com/content/f4be79518ebb0283ed37012b42152dedc2bdfe2e7a89267c7448ab36e02bf99ci0";
     }
 
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                         CONFIG                             */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Toggles the blocking of a Brain NFT's URI
     /// @param tokenId The ID of the Brain NFT
     function toggleBlockBrainUri(uint256 tokenId) external onlyOwner {
@@ -704,6 +740,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
     function setMetadataContract(address _metadataContract) external onlyOwner {
         metadataContract = BrainsMetadata(_metadataContract);
     }
+
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                         VIEWS++                            */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
 
     /// @notice Gets the user's share of a specific Brain NFT
     /// @param brainId The ID of the Brain NFT
@@ -905,7 +945,10 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
         return this.onERC721Received.selector;
     }
 
-    // Events
+    /*´:°•.𓆏°+.*•𓆏´.*:˚𓆏°*.˚•𓆏´.°:°𓆏•.°•.𓆏*•´.*𓆏:˚.°*xd*/
+    /*                           EVENT                           */
+    /*.•°:𓆏°.´+˚𓆏.*°.˚𓆏:*.´•𓆏*.+°.𓆏•°:´*𓆏.´•*.𓆏•°.•°𓆏*/
+
     /// @notice Emitted when a new Brain NFT is minted
     /// @param nftId The ID of the minted Brain NFT
     /// @param brainFather The address of the minter
@@ -1009,7 +1052,6 @@ contract Brains is ERC721Enumerable, ReentrancyGuard, Ownable, IERC721Receiver {
 interface IBrainCredits {
     /// @notice Decreases the total supply of Brain Credits
     function decreaseTotalSupply() external;
-
     /// @notice Increases the total supply of Brain Credits
     function increaseTotalSupply() external;
 }
